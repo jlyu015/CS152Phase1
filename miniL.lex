@@ -63,7 +63,7 @@ return	            {printf("RETURN\n"); currPos += yyleng;}
 
 
           /*    IDENTIFIERS AND NUMBERS    */
-{LETTER}+{ID}*                 {printf("IDENT %s\n", yytext); currPos += yyleng;}
+{ID}+                 {printf("IDENT %s\n", yytext); currPos += yyleng;}
 {DIGIT}+             {printf("NUMBER %s\n", yytext); currPos += yyleng;}
 
 
