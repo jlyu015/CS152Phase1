@@ -32,6 +32,7 @@ of	                  {printf("OF\n"); currPos += yyleng;}
 if	                  {printf("IF\n"); currPos += yyleng;}
 then                	{printf("THEN\n"); currPos += yyleng;}
 endif                {printf("ENDIF\n"); currPos += yyleng;}
+else                 {printf("ELSE\n"); currPos += yyleng;}
 for	               {printf("FOR\n"); currPos += yyleng;}
 while               	{printf("WHILE\n"); currPos += yyleng;}
 do	                  {printf("DO\n"); currPos += yyleng;}
@@ -48,8 +49,8 @@ false                {printf("FALSE\n"); currPos += yyleng;}
 return	            {printf("RETURN\n"); currPos += yyleng;}
 
          /*    ARITHMETIC OPERATORS    */
-"-"                    {printf("MINUS\n"); currPos += yyleng;}
-"+"                  {printf("PLUS\n"); currPos += yyleng;}
+"-"                    {printf("SUB\n"); currPos += yyleng;}
+"+"                  {printf("ADD\n"); currPos += yyleng;}
 "*"                  {printf("MULT\n"); currPos += yyleng;}
 "/"                  {printf("DIV\n"); currPos += yyleng;}
 "%"                  {printf("MOD\n"); currPos += yyleng;}
@@ -82,16 +83,16 @@ return	            {printf("RETURN\n"); currPos += yyleng;}
 
 
 [ \t]+         {/* ignores spaces */ currPos += yyleng;}
-"\n"           {currLine++; currPos = 1;}
-[##].+         {/*ignores comments (newline will reset currLine and currPos)*/}
+"\n"           {/* ignores newlines */ currLine++; currPos = 1;}
+##.*         {/*ignores comments*/ currLine++; currPos = 1;}
 
 
          /*    ERROR CATCHES    */
-{ERROR_START_ID}       { printf("Error at line %d, column %d: identifier \"%s\" must begin with a letter \n", currLine, currPos, yytext); exit(0); }
-{ERROR_END_ID}       { printf("Error at line %d, column %d: identifier \"%s\" cannot end with an underscore \n", currLine, currPos, yytext); exit(0); }
+{ERROR_START_ID}       { printf("Error at line %d, column %d: identifier \"%s\" must begin with a letter\n", currLine, currPos-1, yytext); exit(0); }
+{ERROR_END_ID}       { printf("Error at line %d, column %d: identifier \"%s\" cannot end with an underscore\n", currLine, currPos-1, yytext); exit(0); }
 
 
-.              {printf("Error at line %d, column %d: unrecognized symbol \%s\"\n", currLine, currPos, yytext); exit(0);}
+.              {printf("Error at line %d, column %d: unrecognized symbol \"\%s\"\n", currLine, currPos-1, yytext); exit(0);}
 
 %%
 
