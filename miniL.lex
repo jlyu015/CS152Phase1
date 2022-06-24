@@ -9,7 +9,9 @@
 
 LETTER   [a-zA-Z]
 DIGIT    [0-9]
-ID       ({LETTER}+({LETTER}|{DIGIT})|"_")*({LETTER}|{DIGIT})+
+ID       ({LETTER}({LETTER}|{DIGIT}|"_")*)*({LETTER}({LETTER}|{DIGIT})*)+
+ERROR_START_ID   ({DIGIT}|"_")({ID}|{DIGIT}|"_")*
+ERROR_END_ID   {ID}"_"+
 /* COMP     [==|<>|<|>|<=|>=] */
 
 %%
@@ -80,11 +82,16 @@ return	            {printf("RETURN\n"); currPos += yyleng;}
 
 
 [ \t]+         {/* ignores spaces */ currPos += yyleng;}
-"/n"           {currLine++; currPos = 1;}
+"\n"           {currLine++; currPos = 1;}
+[##].+         {/*ignores comments (newline will reset currLine and currPos)*/}
 
 
          /*    ERROR CATCHES    */
-.              {printf("Error on line %d, column %d: unrecognized symbol \%s\"\n", currLine, currPos, yytext); exit(0);}
+{ERROR_START_ID}       { printf("Error at line %d, column %d: identifier \"%s\" must begin with a letter \n", currLine, currPos, yytext); exit(0); }
+{ERROR_END_ID}       { printf("Error at line %d, column %d: identifier \"%s\" cannot end with an underscore \n", currLine, currPos, yytext); exit(0); }
+
+
+.              {printf("Error at line %d, column %d: unrecognized symbol \%s\"\n", currLine, currPos, yytext); exit(0);}
 
 %%
 
