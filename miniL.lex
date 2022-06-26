@@ -9,7 +9,7 @@
 
 LETTER   [a-zA-Z]
 DIGIT    [0-9]
-ID       ({LETTER}({LETTER}|{DIGIT}|"_")*)*({LETTER}({LETTER}|{DIGIT})*)+
+ID       {LETTER}(({LETTER}|{DIGIT}|"_")*({LETTER}|{DIGIT})+)*
 ERROR_START_ID   ({DIGIT}|"_")({ID}|{DIGIT}|"_")*
 ERROR_END_ID   {ID}"_"+
 /* COMP     [==|<>|<|>|<=|>=] */
